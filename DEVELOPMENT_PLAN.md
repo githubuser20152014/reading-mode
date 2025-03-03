@@ -4,9 +4,9 @@
 **Goal**: Enhance how users can activate reading mode
 
 1. Keyboard Shortcuts
-   - Add commands to manifest.json
-   - Implement shortcut listener (Alt+R)
-   - Add shortcut configuration UI
+   - ✅ Add commands to manifest.json
+   - ✅ Implement shortcut listener (Alt+R)
+   - ✅ Add shortcut configuration UI (chrome://extensions/shortcuts)
 
 2. Context Menu Integration
    - Add contextMenus permission
