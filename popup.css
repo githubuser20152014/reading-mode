@@ -1,0 +1,31 @@
+.popup-container {
+  width: 300px;
+  padding: 16px;
+}
+
+.toggle-btn {
+  width: 100%;
+  padding: 8px 16px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.toggle-btn:hover {
+  background-color: #1557b0;
+}
+
+.settings {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+} 

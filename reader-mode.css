@@ -1,0 +1,35 @@
+#reader-mode-content {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #333;
+  background: #fff;
+}
+
+#reader-mode-content.dark {
+  background: #222;
+  color: #eee;
+}
+
+#reader-mode-content .reader-header {
+  margin-bottom: 32px;
+}
+
+#reader-mode-content h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+}
+
+#reader-mode-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 24px 0;
+}
+
+#reader-mode-content p {
+  margin: 0 0 16px 0;
+} 
