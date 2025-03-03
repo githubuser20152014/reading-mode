@@ -9,9 +9,9 @@
    - ✅ Add shortcut configuration UI (chrome://extensions/shortcuts)
 
 2. Context Menu Integration
-   - Add contextMenus permission
-   - Create "View in Reading Mode" menu item
-   - Handle context menu activation
+   - ✅ Add contextMenus permission
+   - ✅ Create "View in Reading Mode" menu item
+   - ✅ Handle context menu activation
 
 3. Visual Readability Indicator
    - Create background script for page analysis

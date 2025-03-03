@@ -6,7 +6,8 @@
   "permissions": [
     "activeTab",
     "storage",
-    "tabs"
+    "tabs",
+    "contextMenus"
   ],
   "commands": {
     "toggle-reader-mode": {

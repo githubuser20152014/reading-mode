@@ -15,7 +15,7 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 ### Activation Methods
 - [ ] Browser toolbar icon with visual readability indicator
 - [x] Customizable keyboard shortcuts (e.g., Alt+R)
-- [ ] Context menu integration
+- [x] Context menu integration
 
 ### Transition Experience
 - [ ] Smooth animation transitions (0.3-0.5s)
