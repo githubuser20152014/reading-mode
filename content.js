@@ -126,6 +126,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       success: true,
       isEnabled: readingMode.isEnabled 
     });
+  } else if (request.action === 'getState') {
+    sendResponse({ 
+      success: true,
+      isEnabled: readingMode.isEnabled 
+    });
   } else if (request.action === 'setDarkMode') {
     readingMode.setDarkMode(request.darkMode);
     sendResponse({ success: true });

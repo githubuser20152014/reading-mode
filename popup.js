@@ -12,6 +12,19 @@ const fontSizeDisplay = document.getElementById('fontSizeDisplay');
 const lineHeightInput = document.getElementById('lineHeight');
 const lineHeightDisplay = document.getElementById('lineHeightDisplay');
 
+// Check reading mode state when popup opens
+document.addEventListener('DOMContentLoaded', async () => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  
+  chrome.tabs.sendMessage(tab.id, { action: 'getState' }, (response) => {
+    if (response && response.isEnabled) {
+      toggleButton.textContent = 'Exit Reading Mode';
+      const settingsPanel = document.querySelector('.settings');
+      settingsPanel.classList.add('visible');
+    }
+  });
+});
+
 // Handle reader mode toggle
 toggleButton.addEventListener('click', async () => {
   // Get the active tab
