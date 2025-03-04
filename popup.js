@@ -17,7 +17,7 @@ toggleButton.addEventListener('click', async () => {
   chrome.tabs.sendMessage(tab.id, { action: 'toggleReader' }, (response) => {
     if (response && response.success) {
       // Update button text based on reader mode state
-      toggleButton.textContent = response.isEnabled ? 'Disable Reading Mode' : 'Enable Reading Mode';
+      toggleButton.textContent = response.isEnabled ? 'Exit Reading Mode' : 'Reading Mode';
     }
   });
 });
