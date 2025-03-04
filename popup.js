@@ -15,6 +15,10 @@ toggleButton.addEventListener('click', async () => {
     if (response && response.success) {
       // Update button text based on reader mode state
       toggleButton.textContent = response.isEnabled ? 'Reading Mode' : 'Exit Reading Mode';
+      // Show/hide dark mode settings
+      const settingsPanel = document.querySelector('.settings');
+      settingsPanel.classList.toggle('visible', !response.isEnabled);
+      
       // Reset dark mode when exiting reading mode
       if (response.isEnabled) {
         darkModeCheckbox.checked = false;

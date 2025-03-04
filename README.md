@@ -25,9 +25,8 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 
 ### Reading Interface
 - [ ] Minimalistic controls
-- [x] Multiple exit options (back arrow, Esc key, extension icon)
-- [ ] Collapsible settings panel
-- [ ] Multiple exit options (back arrow, Esc key, extension icon)
+- [x] Multiple exit options (back arrow, extension icon)
+- [x] Collapsible settings panel
 
 ### Smart Features
 - [ ] Pre-processing of page content

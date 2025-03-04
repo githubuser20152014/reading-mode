@@ -22,6 +22,11 @@
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid #eee;
+  display: none;  /* Hidden by default */
+}
+
+.settings.visible {
+  display: block;  /* Show when reading mode is active */
 }
 
 .theme-toggle {

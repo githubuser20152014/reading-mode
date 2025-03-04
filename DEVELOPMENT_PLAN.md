@@ -28,7 +28,7 @@
 
 2. Navigation Controls
    - ✅ Add back button component (via popup)
-   - Create collapsible settings panel
+   - ✅ Create collapsible settings panel (dark mode toggle)
 
 3. Error Handling UI
    - Design error message components
