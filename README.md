@@ -8,6 +8,7 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 - 🔄 One-click toggle for reading mode
 - 📖 Clean article view with optimal typography
 - 🌓 Dark mode support with persistent settings
+- ✨ Customizable text settings (size, spacing, font)
 - 🎯 Removes ads, sidebars, and other distractions
 - 📱 Responsive layout for comfortable reading
 
@@ -39,7 +40,7 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 ## Planned Features
 
 ### Phase 2: Enhanced Reading Experience
-- [ ] Font customization (size, family, spacing)
+- [x] Font customization (size, family, spacing)
 - [ ] Custom width controls
 - [ ] Focus mode highlighting
 - [ ] Keyboard shortcuts

@@ -5,6 +5,13 @@ const darkModeCheckbox = document.getElementById('darkMode');
 // Ensure dark mode is unchecked by default
 darkModeCheckbox.checked = false;
 
+// Get font control elements
+const fontFamilySelect = document.getElementById('fontFamily');
+const fontSizeInput = document.getElementById('fontSize');
+const fontSizeDisplay = document.getElementById('fontSizeDisplay');
+const lineHeightInput = document.getElementById('lineHeight');
+const lineHeightDisplay = document.getElementById('lineHeightDisplay');
+
 // Handle reader mode toggle
 toggleButton.addEventListener('click', async () => {
   // Get the active tab
@@ -40,6 +47,40 @@ darkModeCheckbox.addEventListener('change', (e) => {
     chrome.tabs.sendMessage(tab.id, { 
       action: 'setDarkMode', 
       darkMode: isDarkMode 
+    });
+  });
+});
+
+// Handle font family changes
+fontFamilySelect.addEventListener('change', (e) => {
+  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+    chrome.tabs.sendMessage(tab.id, { 
+      action: 'setFontFamily', 
+      fontFamily: e.target.value 
+    });
+  });
+});
+
+// Handle font size changes
+fontSizeInput.addEventListener('input', (e) => {
+  const size = e.target.value;
+  fontSizeDisplay.textContent = `${size}px`;
+  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+    chrome.tabs.sendMessage(tab.id, { 
+      action: 'setFontSize', 
+      fontSize: size 
+    });
+  });
+});
+
+// Handle line height changes
+lineHeightInput.addEventListener('input', (e) => {
+  const height = e.target.value;
+  lineHeightDisplay.textContent = height;
+  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+    chrome.tabs.sendMessage(tab.id, { 
+      action: 'setLineHeight', 
+      lineHeight: height 
     });
   });
 }); 

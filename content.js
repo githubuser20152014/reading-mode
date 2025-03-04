@@ -3,6 +3,9 @@ class ReadingMode {
     this.isEnabled = false;
     this.originalContent = null;
     this.readerContent = null;
+    this.fontFamily = 'system-ui';
+    this.fontSize = '18px';
+    this.lineHeight = '1.6';
   }
 
   async init() {
@@ -89,6 +92,27 @@ class ReadingMode {
       }
     }
   }
+
+  setFontFamily(family) {
+    if (this.readerContent) {
+      this.fontFamily = family;
+      this.readerContent.style.fontFamily = family;
+    }
+  }
+
+  setFontSize(size) {
+    if (this.readerContent) {
+      this.fontSize = size + 'px';
+      this.readerContent.style.fontSize = this.fontSize;
+    }
+  }
+
+  setLineHeight(height) {
+    if (this.readerContent) {
+      this.lineHeight = height;
+      this.readerContent.style.lineHeight = height;
+    }
+  }
 }
 
 // Initialize reading mode
@@ -104,6 +128,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
   } else if (request.action === 'setDarkMode') {
     readingMode.setDarkMode(request.darkMode);
+    sendResponse({ success: true });
+  } else if (request.action === 'setFontFamily') {
+    readingMode.setFontFamily(request.fontFamily);
+    sendResponse({ success: true });
+  } else if (request.action === 'setFontSize') {
+    readingMode.setFontSize(request.fontSize);
+    sendResponse({ success: true });
+  } else if (request.action === 'setLineHeight') {
+    readingMode.setLineHeight(request.lineHeight);
     sendResponse({ success: true });
   }
 }); 

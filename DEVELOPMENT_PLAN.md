@@ -29,6 +29,10 @@
 2. Navigation Controls
    - ✅ Add back button component (via popup)
    - ✅ Create collapsible settings panel (dark mode toggle)
+   - ✅ Add text customization controls
+     - ✅ Font size slider
+     - ✅ Line height adjustment
+     - ✅ Font family selection
 
 3. Error Handling UI
    - Design error message components
