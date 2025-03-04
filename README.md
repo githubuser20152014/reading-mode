@@ -9,6 +9,7 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 - 📖 Clean article view with optimal typography
 - 🌓 Dark mode support with persistent settings
 - ✨ Customizable text settings (size, spacing, font)
+- ⏱️ Estimated reading time
 - 🎯 Removes ads, sidebars, and other distractions
 - 📱 Responsive layout for comfortable reading
 
@@ -36,6 +37,7 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
   - [ ] Failed content detection warnings
   - [ ] Partial content notices
   - [ ] Interactive content warnings
+- [x] Reading time estimation
 
 ## Planned Features
 

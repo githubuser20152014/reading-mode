@@ -6,6 +6,9 @@ class ReadingMode {
     this.fontFamily = 'system-ui';
     this.fontSize = '18px';
     this.lineHeight = '1.6';
+    this.articleStats = {
+      readingTime: 0
+    };
   }
 
   async init() {
@@ -58,6 +61,12 @@ class ReadingMode {
     });
     
     this.isEnabled = true;
+
+    const stats = this.analyzeContent(article);
+    chrome.runtime.sendMessage({ 
+      action: 'updateInsights', 
+      stats: stats 
+    });
   }
 
   disable() {
@@ -112,6 +121,14 @@ class ReadingMode {
       this.lineHeight = height;
       this.readerContent.style.lineHeight = height;
     }
+  }
+
+  analyzeContent(article) {
+    // Calculate reading time (avg reading speed: 200 words/min)
+    const wordCount = article.textContent.split(/\s+/).length;
+    this.articleStats.readingTime = Math.ceil(wordCount / 200);
+    
+    return this.articleStats;
   }
 }
 

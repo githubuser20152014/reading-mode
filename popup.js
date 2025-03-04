@@ -96,4 +96,17 @@ lineHeightInput.addEventListener('input', (e) => {
       lineHeight: height 
     });
   });
+});
+
+// Update article insights
+function updateInsights(stats) {
+  document.getElementById('readingTime').textContent = 
+    `~${stats.readingTime} min`;
+}
+
+// Listen for insight updates
+chrome.runtime.onMessage.addListener((request, sender) => {
+  if (request.action === 'updateInsights') {
+    updateInsights(request.stats);
+  }
 }); 

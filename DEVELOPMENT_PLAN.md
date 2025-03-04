@@ -33,11 +33,11 @@
      - ✅ Font size slider
      - ✅ Line height adjustment
      - ✅ Font family selection
+   - ✅ Add reading time estimation
 
 3. Error Handling UI
    - Design error message components
-   - Implement content detection warnings
-   - Add partial content notices
+   - Add loading state indicators
 
 ## Sprint 3: Smart Features & Pre-processing
 **Goal**: Make the extension more intelligent and faster

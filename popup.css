@@ -105,4 +105,16 @@ input[type="range"]::-webkit-slider-thumb {
   background: #e8f0fe;
   border-color: #1a73e8;
   color: #1a73e8;
+}
+
+.article-insights {
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.insight-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
 } 
