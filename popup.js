@@ -2,11 +2,8 @@
 const toggleButton = document.getElementById('toggleReader');
 const darkModeCheckbox = document.getElementById('darkMode');
 
-// Load saved dark mode preference
-chrome.storage.sync.get(['darkMode'], (result) => {
-  const isDarkMode = result.darkMode || false;
-  darkModeCheckbox.checked = isDarkMode;
-});
+// Ensure dark mode is unchecked by default
+darkModeCheckbox.checked = false;
 
 // Handle reader mode toggle
 toggleButton.addEventListener('click', async () => {
@@ -17,7 +14,15 @@ toggleButton.addEventListener('click', async () => {
   chrome.tabs.sendMessage(tab.id, { action: 'toggleReader' }, (response) => {
     if (response && response.success) {
       // Update button text based on reader mode state
-      toggleButton.textContent = response.isEnabled ? 'Exit Reading Mode' : 'Reading Mode';
+      toggleButton.textContent = response.isEnabled ? 'Reading Mode' : 'Exit Reading Mode';
+      // Reset dark mode when exiting reading mode
+      if (response.isEnabled) {
+        darkModeCheckbox.checked = false;
+        chrome.tabs.sendMessage(tab.id, { 
+          action: 'setDarkMode', 
+          darkMode: false 
+        });
+      }
     }
   });
 });
@@ -25,9 +30,6 @@ toggleButton.addEventListener('click', async () => {
 // Handle dark mode toggle
 darkModeCheckbox.addEventListener('change', (e) => {
   const isDarkMode = e.target.checked;
-  
-  // Save preference
-  chrome.storage.sync.set({ darkMode: isDarkMode });
   
   // Send dark mode state to content script
   chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {

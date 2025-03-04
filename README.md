@@ -4,6 +4,7 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 
 ## Current Features
 
+- 🎭 Smooth transitions between modes
 - 🔄 One-click toggle for reading mode
 - 📖 Clean article view with optimal typography
 - 🌓 Dark mode support with persistent settings
@@ -18,13 +19,13 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 - [x] Context menu integration
 
 ### Transition Experience
-- [ ] Smooth animation transitions (0.3-0.5s)
+- [x] Smooth animation transitions (0.3-0.5s)
 - [ ] Background content analysis
 - [ ] Loading indicators for longer articles
 
 ### Reading Interface
 - [ ] Minimalistic controls
-- [ ] Fixed position navigation
+- [x] Multiple exit options (back arrow, Esc key, extension icon)
 - [ ] Collapsible settings panel
 - [ ] Multiple exit options (back arrow, Esc key, extension icon)
 

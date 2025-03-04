@@ -22,14 +22,12 @@
 **Goal**: Improve the user experience when entering/exiting reading mode
 
 1. Smooth Transitions
-   - Add CSS transitions for content swap
-   - Implement fade effects
+   - ✅ Add CSS transitions for content swap
+   - ✅ Implement fade effects
    - Create loading indicator component
 
 2. Navigation Controls
-   - Design fixed position header/footer
-   - Add back button component
-   - Implement Escape key listener
+   - ✅ Add back button component (via popup)
    - Create collapsible settings panel
 
 3. Error Handling UI
