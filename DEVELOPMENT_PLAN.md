@@ -33,6 +33,10 @@
      - ✅ Font size slider
      - ✅ Line height adjustment
      - ✅ Font family selection
+   - ✅ Book-inspired UI theme
+     - ✅ Warm color palette
+     - ✅ Comfortable rounded corners
+     - ✅ Paper-like textures
    - ✅ Add reading time estimation
 
 3. Error Handling UI
