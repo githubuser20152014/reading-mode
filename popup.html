@@ -6,50 +6,33 @@
 </head>
 <body>
   <div class="popup-container">
-    <button id="toggleReader" class="toggle-btn">
-      Reading Mode
-    </button>
-    <div class="settings">
-      <div class="article-insights">
-        <div class="insights-header">
-          <h2>Article Insights</h2>
+    <div class="text-settings">
+      <h2>Text Settings</h2>
+      <div class="control-group">
+        <div class="control-label">
+          <span>Size</span>
+          <span id="fontSizeDisplay">18px</span>
         </div>
-        <div class="insights-content">
-          <div class="insight-item">
-            <span class="label">Reading Time</span>
-            <span id="readingTime" class="value">~3 min</span>
-          </div>
-        </div>
+        <input type="range" id="fontSize" min="14" max="24" value="18">
       </div>
-      <div class="settings-header">
-        <h2>Text Settings</h2>
-      </div>
-      <div class="text-controls">
-        <div class="control-group">
-          <div class="control-label">
-            <span>Size</span>
-            <span id="fontSizeDisplay">18px</span>
-          </div>
-          <input type="range" id="fontSize" min="14" max="24" value="18">
-        </div>
 
-        <div class="control-group">
-          <div class="control-label">
-            <span>Line Spacing</span>
-            <span id="lineHeightDisplay">1.6</span>
-          </div>
-          <input type="range" id="lineHeight" min="1.2" max="2" step="0.1" value="1.6">
+      <div class="control-group">
+        <div class="control-label">
+          <span>Line Spacing</span>
+          <span id="lineHeightDisplay">1.6</span>
         </div>
-
-        <div class="font-options">
-          <select id="fontFamily">
-            <option value="system-ui">Sans-serif</option>
-            <option value="Georgia">Serif</option>
-            <option value="Merriweather">Merriweather</option>
-            <option value="monospace">Mono</option>
-          </select>
-        </div>
+        <input type="range" id="lineHeight" min="1.2" max="2" step="0.1" value="1.6">
       </div>
+
+      <div class="font-options">
+        <select id="fontFamily">
+          <option value="system-ui">Sans-serif</option>
+          <option value="Georgia">Serif</option>
+          <option value="Merriweather">Merriweather</option>
+          <option value="monospace">Mono</option>
+        </select>
+      </div>
+
       <div class="theme-toggle">
         <label>
           <input type="checkbox" id="darkMode">
@@ -57,6 +40,10 @@
         </label>
       </div>
     </div>
+
+    <button id="toggleReader" class="toggle-btn">
+      Reading Mode
+    </button>
   </div>
   <script src="popup.js"></script>
 </body>

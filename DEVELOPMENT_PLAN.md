@@ -28,7 +28,7 @@
 
 2. Navigation Controls
    - ✅ Add back button component (via popup)
-   - ✅ Create collapsible settings panel (dark mode toggle)
+   - ✅ Create single-screen settings panel
    - ✅ Add text customization controls
      - ✅ Font size slider
      - ✅ Line height adjustment

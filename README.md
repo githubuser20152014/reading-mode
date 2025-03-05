@@ -9,9 +9,9 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 - 📖 Clean article view with optimal typography
 - 🌓 Dark mode support with persistent settings
 - ✨ Customizable text settings (size, spacing, font)
-- ⏱️ Estimated reading time
 - 🎯 Removes ads, sidebars, and other distractions
 - 📱 Responsive layout for comfortable reading
+- 🎨 Single-screen settings interface
 
 ## Planned User Experience
 
@@ -26,9 +26,9 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 - [ ] Loading indicators for longer articles
 
 ### Reading Interface
-- [ ] Minimalistic controls
+- [x] Minimalistic controls
 - [x] Multiple exit options (back arrow, extension icon)
-- [x] Collapsible settings panel
+- [x] Single-screen settings panel
 
 ### Smart Features
 - [ ] Pre-processing of page content
