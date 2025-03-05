@@ -7,7 +7,10 @@
     "activeTab",
     "storage",
     "tabs",
-    "contextMenus"
+    "contextMenus",
+    "identity",
+    "identity.email",
+    "payments"
   ],
   "commands": {
     "toggle-reader-mode": {
@@ -28,7 +31,12 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["readability.js", "content.js"],
+      "js": [
+        "readability.js",
+        "services/ai.js",
+        "services/premium.js",
+        "content.js"
+      ],
       "css": ["reader-mode.css"]
     }
   ],
@@ -39,5 +47,9 @@
   },
   "background": {
     "service_worker": "background/commands.js"
+  },
+  "oauth2": {
+    "client_id": "${OAUTH_CLIENT_ID}",
+    "scopes": ["openid", "email", "profile"]
   }
 } 

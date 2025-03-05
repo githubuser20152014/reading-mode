@@ -12,6 +12,11 @@ const fontSizeDisplay = document.getElementById('fontSizeDisplay');
 const lineHeightInput = document.getElementById('lineHeight');
 const lineHeightDisplay = document.getElementById('lineHeightDisplay');
 
+// Settings panel controls
+const settingsBtn = document.getElementById('settingsBtn');
+const settingsPanel = document.getElementById('settingsPanel');
+const backBtn = document.getElementById('backBtn');
+
 // Check reading mode state when popup opens
 document.addEventListener('DOMContentLoaded', async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -108,5 +113,24 @@ function updateInsights(stats) {
 chrome.runtime.onMessage.addListener((request, sender) => {
   if (request.action === 'updateInsights') {
     updateInsights(request.stats);
+  }
+});
+
+// Settings panel controls
+settingsBtn.addEventListener('click', () => {
+  settingsPanel.classList.toggle('visible');
+});
+
+// Back button handler
+backBtn.addEventListener('click', () => {
+  settingsPanel.classList.remove('visible');
+});
+
+// Close settings when clicking outside
+document.addEventListener('click', (e) => {
+  if (!settingsPanel.contains(e.target) && 
+      !settingsBtn.contains(e.target) && 
+      settingsPanel.classList.contains('visible')) {
+    settingsPanel.classList.remove('visible');
   }
 }); 

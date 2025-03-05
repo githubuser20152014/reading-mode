@@ -9,6 +9,7 @@ class ReadingMode {
     this.articleStats = {
       readingTime: 0
     };
+    this.summaryButton = null;
   }
 
   async init() {
@@ -18,8 +19,16 @@ class ReadingMode {
     }
   }
 
+  async initPremiumService() {
+    if (!this.premiumService) {
+      this.premiumService = new PremiumService();
+      await this.premiumService.init();
+    }
+  }
+
   async enable() {
     await this.init();
+    await this.initPremiumService();
     
     // Create reader container
     this.readerContent = document.createElement('div');
@@ -67,6 +76,16 @@ class ReadingMode {
       action: 'updateInsights', 
       stats: stats 
     });
+
+    // Add summary button only if premium or trial available
+    if (this.premiumService.features.summarization.enabled || 
+        this.premiumService.features.summarization.dailyQuota > 0) {
+      this.summaryButton = document.createElement('button');
+      this.summaryButton.className = 'summary-button';
+      this.summaryButton.textContent = 'Summarize';
+      this.summaryButton.addEventListener('click', () => this.handleSummary());
+      this.readerContent.appendChild(this.summaryButton);
+    }
   }
 
   disable() {
@@ -129,6 +148,31 @@ class ReadingMode {
     this.articleStats.readingTime = Math.ceil(wordCount / 200);
     
     return this.articleStats;
+  }
+
+  async handleSummary() {
+    try {
+      const article = this.readerContent.querySelector('.reader-content');
+      const text = article.textContent;
+      
+      // Show loading state
+      this.summaryButton.textContent = 'Summarizing...';
+      this.summaryButton.disabled = true;
+      
+      const summary = await this.premiumService.aiService.summarizeArticle(text);
+      
+      // Display summary
+      this.showSummary(summary);
+    } catch (error) {
+      console.error('Summary failed:', error);
+      // Show upgrade prompt if quota exceeded
+      if (error.code === 'QUOTA_EXCEEDED') {
+        this.showUpgradePrompt();
+      }
+    } finally {
+      this.summaryButton.textContent = 'Summarize';
+      this.summaryButton.disabled = false;
+    }
   }
 }
 

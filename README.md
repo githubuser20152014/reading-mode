@@ -12,7 +12,8 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 - 🎯 Removes ads, sidebars, and other distractions
 - 📱 Responsive layout for comfortable reading
 - 🎨 Single-screen settings interface
-- 📚 Book-inspired, comfortable UI design
+- 💎 Premium features in dedicated settings panel
+- 🎯 Focused UI with minimal distractions
 
 ## Planned User Experience
 
@@ -30,6 +31,7 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 - [x] Minimalistic controls
 - [x] Multiple exit options (back arrow, extension icon)
 - [x] Single-screen settings panel
+- [x] Intuitive navigation between settings
 
 ### Smart Features
 - [ ] Pre-processing of page content

@@ -38,4 +38,23 @@
 
 #reader-mode-content p {
   margin: 0 0 16px 0;
+}
+
+.summary-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  background: #8b6b4d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Georgia', serif;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.summary-button:hover {
+  opacity: 1;
 } 
