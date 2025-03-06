@@ -111,6 +111,17 @@ A Chrome/Brave extension that transforms articles into a clean, distraction-free
 - Make sure all required files are present in the directory
 - Check the console for any error messages
 
+## Icons
+The extension uses three icon sizes:
+- 16px: Used for favicon and toolbar
+- 48px: Used in extension management page and installation
+- 128px: Used in Chrome Web Store and higher resolution displays
+
+Icon files are stored in the `icons/` directory as:
+- icon16px.png
+- icon48px.png  
+- icon128px.png
+
 ## Credits
 
 This extension uses [Mozilla's Readability.js](https://github.com/mozilla/readability) for content parsing. 
