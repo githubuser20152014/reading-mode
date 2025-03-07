@@ -1,0 +1,15 @@
+{
+  "name": "reading-mode",
+  "version": "1.0.0",
+  "description": "A Chrome/Brave extension that transforms articles into a clean, distraction-free reading experience with dark mode support.",
+  "main": "content.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
