@@ -134,3 +134,60 @@ document.addEventListener('click', (e) => {
     settingsPanel.classList.remove('visible');
   }
 }); 
+
+// Add to your existing popup.js
+import { authService } from './src/auth/auth-service';
+import { premiumController } from './src/premium/premium-controller';
+import { authModal } from './src/components/auth/AuthModal';
+
+// Add login/profile button to popup
+const addAuthButton = () => {
+  const container = document.querySelector('.popup-container');
+  const authButton = document.createElement('button');
+  authButton.className = 'auth-button';
+  
+  if (authService.isAuthenticated()) {
+    authButton.textContent = 'My Account';
+    authButton.addEventListener('click', showProfileSettings);
+  } else {
+    authButton.textContent = 'Sign In';
+    authButton.addEventListener('click', () => authModal.show());
+  }
+  
+  container.appendChild(authButton);
+};
+
+// Update premium feature UI based on status
+const updatePremiumUI = () => {
+  const premiumFeatures = document.querySelectorAll('.premium-feature');
+  
+  premiumFeatures.forEach(feature => {
+    const featureName = feature.dataset.feature;
+    const hasAccess = premiumController.canUseFeature(featureName);
+    
+    if (hasAccess) {
+      feature.classList.add('premium-active');
+      feature.querySelector('.upgrade-btn').textContent = 'Enabled';
+    } else {
+      feature.classList.remove('premium-active');
+      feature.querySelector('.upgrade-btn').textContent = 'Upgrade';
+    }
+  });
+};
+
+// Listen for auth changes
+document.addEventListener('DOMContentLoaded', () => {
+  addAuthButton();
+  updatePremiumUI();
+  
+  // Listen for auth status changes
+  document.addEventListener('auth:success', () => {
+    addAuthButton();
+    updatePremiumUI();
+  });
+  
+  // Listen for premium status changes
+  document.addEventListener('premium:statusChanged', () => {
+    updatePremiumUI();
+  });
+});

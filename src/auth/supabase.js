@@ -1,20 +1,15 @@
-// Supabase client initialization
-// This will be imported by other modules that need Supabase access
+import { createClient } from '@supabase/supabase-js';
 
+// These would be replaced with environment variables in a build process
 const supabaseUrl = 'YOUR_SUPABASE_URL';
 const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
 
-// We'll replace these with environment variables during build
+// Create a singleton instance
+let supabaseInstance = null;
 
-export const createSupabaseClient = () => {
-  // We'll implement the actual client creation later
-  // This is just a placeholder
-  return {
-    auth: {
-      signUp: () => {},
-      signIn: () => {},
-      signOut: () => {},
-      getUser: () => {}
-    }
-  };
+export const getSupabaseClient = () => {
+  if (!supabaseInstance) {
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
+  }
+  return supabaseInstance;
 };

@@ -53,3 +53,17 @@
     "scopes": ["openid", "email", "profile"]
   }
 } 
+
+"content_scripts": [
+  {
+    "matches": ["<all_urls>"],
+    "js": [
+      "readability.js",
+      "content.js"
+    ],
+    "css": [
+      "reader-mode.css",
+      "src/components/auth/auth-modal.css"
+    ]
+  }
+]
