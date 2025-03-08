@@ -21,8 +21,10 @@ class ReadingMode {
 
   async initPremiumService() {
     if (!this.premiumService) {
+      console.log('Initializing premium service...');
       this.premiumService = new PremiumService();
       await this.premiumService.init();
+      console.log('Premium service features:', this.premiumService.features);
     }
   }
 
@@ -54,6 +56,7 @@ class ReadingMode {
     this.readerContent.innerHTML = `
       <div class="reader-header">
         <h1>${article.title}</h1>
+        <div class="reader-controls"></div>
       </div>
       <div class="reader-content">
         ${article.content}
@@ -78,13 +81,42 @@ class ReadingMode {
     });
 
     // Add summary button only if premium or trial available
+    console.log('Checking premium features for summarization...');
+    console.log('Summarization enabled:', this.premiumService.features.summarization.enabled);
+    console.log('Daily quota:', this.premiumService.features.summarization.dailyQuota);
+    
     if (this.premiumService.features.summarization.enabled || 
         this.premiumService.features.summarization.dailyQuota > 0) {
+      console.log('Creating summary button...');
       this.summaryButton = document.createElement('button');
-      this.summaryButton.className = 'summary-button';
-      this.summaryButton.textContent = 'Summarize';
+      this.summaryButton.className = 'reader-control-button summary-button';
+      this.summaryButton.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="21" y1="10" x2="7" y2="10"></line>
+          <line x1="21" y1="6" x2="3" y2="6"></line>
+          <line x1="21" y1="14" x2="3" y2="14"></line>
+          <line x1="21" y1="18" x2="7" y2="18"></line>
+        </svg>
+        Summarize
+      `;
       this.summaryButton.addEventListener('click', () => this.handleSummary());
-      this.readerContent.appendChild(this.summaryButton);
+      
+      // Add button to reader controls
+      const controls = this.readerContent.querySelector('.reader-controls');
+      controls.appendChild(this.summaryButton);
+      
+      console.log('Summary button created and added to the controls');
+    } else {
+      console.log('Conditions not met for showing summary button');
+    }
+
+    // Initialize highlighter after reader mode content is created
+    const readerContent = document.querySelector('.reader-content');
+    if (readerContent && typeof Highlighter !== 'undefined') {
+        // Only initialize if not already initialized
+        if (!window.highlighter) {
+            window.highlighter = new Highlighter(readerContent);
+        }
     }
   }
 
@@ -152,27 +184,115 @@ class ReadingMode {
 
   async handleSummary() {
     try {
+      console.log('Starting summarization...');
       const article = this.readerContent.querySelector('.reader-content');
       const text = article.textContent;
       
-      // Show loading state
-      this.summaryButton.textContent = 'Summarizing...';
+      console.log('Article text length:', text.length);
+      
+      // Store original button content
+      const originalContent = this.summaryButton.innerHTML;
+      
+      // Show loading state while maintaining icon
+      this.summaryButton.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="21" y1="10" x2="7" y2="10"></line>
+          <line x1="21" y1="6" x2="3" y2="6"></line>
+          <line x1="21" y1="14" x2="3" y2="14"></line>
+          <line x1="21" y1="18" x2="7" y2="18"></line>
+        </svg>
+        Summarizing...
+      `;
       this.summaryButton.disabled = true;
       
-      const summary = await this.premiumService.aiService.summarizeArticle(text);
+      console.log('Calling AI service...');
+      // Generate summary with OpenAI
+      const prompt = `Please provide a concise 3-point summary of the following article. Format as three bullet points:\n\n${text}`;
+      
+      if (!this.premiumService || !this.premiumService.aiService) {
+        throw new Error('AI service not initialized');
+      }
+      
+      console.log('Sending request to OpenAI...');
+      const summary = await this.premiumService.aiService.summarizeArticle(prompt);
+      console.log('Received summary:', summary);
       
       // Display summary
       this.showSummary(summary);
     } catch (error) {
       console.error('Summary failed:', error);
-      // Show upgrade prompt if quota exceeded
-      if (error.code === 'QUOTA_EXCEEDED') {
-        this.showUpgradePrompt();
-      }
+      // Show error message to user
+      const errorMessage = error.code === 'QUOTA_EXCEEDED' 
+        ? 'You have reached your daily summary limit. Upgrade to continue using this feature.'
+        : 'Failed to generate summary. Please try again.';
+      
+      this.showError(errorMessage);
     } finally {
-      this.summaryButton.textContent = 'Summarize';
+      // Restore original button content
+      this.summaryButton.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="21" y1="10" x2="7" y2="10"></line>
+          <line x1="21" y1="6" x2="3" y2="6"></line>
+          <line x1="21" y1="14" x2="3" y2="14"></line>
+          <line x1="21" y1="18" x2="7" y2="18"></line>
+        </svg>
+        Summarize
+      `;
       this.summaryButton.disabled = false;
     }
+  }
+
+  showSummary(summary) {
+    // Remove existing summary if present
+    const existingSummary = this.readerContent.querySelector('.reader-summary');
+    if (existingSummary) {
+      existingSummary.remove();
+    }
+
+    // Create summary container
+    const summaryContainer = document.createElement('div');
+    summaryContainer.className = 'reader-summary';
+
+    // Add title
+    const title = document.createElement('h3');
+    title.innerHTML = 'Key Points <span class="ai-badge">AI</span>';
+    summaryContainer.appendChild(title);
+
+    // Split summary into bullet points and ensure exactly 3 points
+    let bulletPoints = summary.split('\n')
+      .map(point => point.trim())
+      .filter(point => point.length > 0)
+      .slice(0, 3);  // Limit to 3 points
+
+    // Add bullet points
+    bulletPoints.forEach(point => {
+      const bulletPoint = document.createElement('span');
+      bulletPoint.className = 'bullet-point';
+      // Remove any leading dashes or bullets that might come from the API
+      bulletPoint.textContent = point.replace(/^[-•*]\s*/, '').trim();
+      summaryContainer.appendChild(bulletPoint);
+    });
+
+    // Insert summary at the top of the content
+    const content = this.readerContent.querySelector('.reader-content');
+    content.insertBefore(summaryContainer, content.firstChild);
+
+    // Scroll to summary with smooth animation
+    summaryContainer.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  showError(message) {
+    const errorContainer = document.createElement('div');
+    errorContainer.className = 'reader-summary-error';
+    errorContainer.textContent = message;
+    
+    const content = this.readerContent.querySelector('.reader-content');
+    content.insertBefore(errorContainer, content.firstChild);
+    
+    // Remove error after 5 seconds
+    setTimeout(() => {
+      errorContainer.remove();
+    }, 5000);
   }
 }
 
