@@ -10,7 +10,8 @@
     "contextMenus",
     "identity",
     "identity.email",
-    "payments"
+    "payments",
+    "scripting"
   ],
   "commands": {
     "toggle-reader-mode": {
@@ -35,9 +36,10 @@
         "readability.js",
         "services/ai.js",
         "services/premium.js",
+        "services/summarizer.js",
         "content.js"
       ],
-      "css": ["reader-mode.css"]
+      "css": ["reader-mode.css", "summarizer.css"]
     }
   ],
   "icons": {
