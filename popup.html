@@ -53,7 +53,7 @@
       Reading Mode
     </button>
 
-    <!-- Settings Panel (hidden by default) -->
+    <!-- Settings Panel -->
     <div id="settingsPanel" class="settings-panel">
       <div class="settings-header">
         <button id="backBtn" class="icon-button">
@@ -64,6 +64,27 @@
         <h3>Premium Features</h3>
       </div>
       <div class="settings-content">
+        <div class="premium-feature api-key-section">
+          <div class="feature-info">
+            <h4>Setup your OpenAI API key</h4>
+            <div class="api-key-wrapper">
+              <input 
+                type="password" 
+                id="openai-api-key" 
+                placeholder="Enter your API key"
+                class="settings-input"
+              >
+              <button class="toggle-visibility" aria-label="Toggle API key visibility">
+                <svg width="16" height="16" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/>
+                </svg>
+              </button>
+            </div>
+            <p class="input-help">Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI</a></p>
+          </div>
+          <button class="upgrade-btn save-key-btn">Save</button>
+        </div>
+
         <div class="premium-feature">
           <div class="feature-info">
             <h4>AI Summary</h4>
@@ -71,6 +92,7 @@
           </div>
           <button class="upgrade-btn">Upgrade</button>
         </div>
+
         <div class="premium-feature">
           <div class="feature-info">
             <h4>Highlighting & Notes</h4>

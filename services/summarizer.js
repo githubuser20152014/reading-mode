@@ -1,13 +1,23 @@
 class Summarizer {
     constructor() {
-        this.apiEndpoint = 'https://api.openai.com/v1/chat/completions';  // We'll make this configurable later
+        this.apiEndpoint = 'https://api.openai.com/v1/chat/completions';
         this.initializeSummarizeButton();
         this.summaryVisible = false;
+        this.loadApiKey();
+    }
+
+    // Load API key from storage
+    async loadApiKey() {
+        try {
+            const result = await chrome.storage.sync.get('openai_api_key');
+            this.apiKey = result.openai_api_key;
+        } catch (error) {
+            console.error('Failed to load API key:', error);
+        }
     }
 
     // Initialize the summarize button
     initializeSummarizeButton() {
-        // Listen for reader mode activation
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.addedNodes && mutation.addedNodes.length) {
@@ -61,41 +71,47 @@ class Summarizer {
         }
     }
 
-    // Get the main content text from the page
-    getPageContent() {
-        // First try to get content from reader mode container
-        const readerContent = document.querySelector('.reader-content');
-        if (readerContent) {
-            // Remove the summary section if it exists to avoid summarizing the summary
-            const existingSummary = readerContent.querySelector('.reader-summary');
-            if (existingSummary) {
-                existingSummary.remove();
-            }
-            
-            // Get text content excluding scripts, styles, and other non-content elements
-            return Array.from(readerContent.children)
-                .filter(el => {
-                    // Exclude non-content elements
-                    const tag = el.tagName.toLowerCase();
-                    return !['script', 'style', 'button'].includes(tag) &&
-                           !el.classList.contains('reader-summary') &&
-                           !el.classList.contains('summarize-button');
+    // Create a summary using OpenAI
+    async createAISummary(text) {
+        if (!this.apiKey) {
+            throw new Error('OpenAI API key not found. Please add it in the extension settings.');
+        }
+
+        try {
+            const response = await fetch(this.apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.apiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are a highly skilled summarizer. Create a clear summary with exactly 3 bullet points that capture the main points. Each bullet point should be concise and start with a bullet point character "•".'
+                        },
+                        {
+                            role: 'user',
+                            content: `Please summarize the following text in exactly 3 bullet points:\n\n${text}`
+                        }
+                    ],
+                    temperature: 0.5,
+                    max_tokens: 150
                 })
-                .map(el => el.textContent.trim())
-                .filter(text => text.length > 0)
-                .join('\n');
-        }
+            });
 
-        // Fallback to article or main content if reader mode isn't active
-        const mainContent = document.querySelector('article') || 
-                          document.querySelector('main') || 
-                          document.querySelector('.article-content');
-        
-        if (mainContent) {
-            return mainContent.textContent.trim();
-        }
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.message || 'Failed to generate summary');
+            }
 
-        return '';
+            const data = await response.json();
+            return data.choices[0].message.content.trim();
+        } catch (error) {
+            console.error('AI Summary failed:', error);
+            throw new Error('Failed to generate AI summary. Falling back to basic summary.');
+        }
     }
 
     // Create a summary of the text
@@ -113,8 +129,16 @@ class Summarizer {
                 throw new Error('No content found to summarize');
             }
 
-            // Create and display summary
-            const summary = this.createBasicSummary(content);
+            // Try AI summary first, fallback to basic if it fails
+            let summary;
+            try {
+                summary = await this.createAISummary(content);
+            } catch (error) {
+                console.warn('Falling back to basic summary:', error);
+                summary = this.createBasicSummary(content);
+            }
+            
+            // Display the summary
             this.displaySummary(summary);
             this.summaryVisible = true;
         } catch (error) {
@@ -123,45 +147,81 @@ class Summarizer {
         }
     }
 
+    // Get the main content text from the page
+    getPageContent() {
+        const readerContent = document.querySelector('.reader-content');
+        if (readerContent) {
+            const existingSummary = readerContent.querySelector('.reader-summary');
+            if (existingSummary) {
+                existingSummary.remove();
+            }
+            
+            return Array.from(readerContent.children)
+                .filter(el => {
+                    const tag = el.tagName.toLowerCase();
+                    return !['script', 'style', 'button'].includes(tag) &&
+                           !el.classList.contains('reader-summary') &&
+                           !el.classList.contains('summarize-button');
+                })
+                .map(el => el.textContent.trim())
+                .filter(text => text.length > 0)
+                .join('\n');
+        }
+
+        const mainContent = document.querySelector('article') || 
+                          document.querySelector('main') || 
+                          document.querySelector('.article-content');
+        
+        return mainContent ? mainContent.textContent.trim() : '';
+    }
+
     // Create a basic summary by extracting key sentences
     createBasicSummary(text) {
-        // Split into sentences (improved implementation)
         const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
-        
-        // Filter out short sentences and those that look like metadata
         const validSentences = sentences.filter(sentence => {
             const cleaned = sentence.trim();
-            return cleaned.length > 30 && // Avoid very short sentences
-                   !cleaned.match(/^(copyright|all rights reserved|published|updated)/i); // Avoid metadata
+            return cleaned.length > 30 && 
+                   !cleaned.match(/^(copyright|all rights reserved|published|updated)/i);
         });
-        
-        // Get first 3 meaningful sentences
         return validSentences.slice(0, 3).join(' ');
+    }
+
+    // Format bullet points with proper spacing
+    formatBulletPoints(summary) {
+        const lines = summary.split('\n');
+        return lines
+            .filter(line => line.trim().startsWith('•'))
+            .map(line => `<span class="bullet-point">${line.trim()}</span>`)
+            .join('');
     }
 
     // Display the summary in the UI
     displaySummary(summary) {
-        // Remove any existing summary
         const existingSummary = document.querySelector('.reader-summary');
         if (existingSummary) {
             existingSummary.remove();
         }
 
-        // Create summary container
         const summaryContainer = document.createElement('div');
         summaryContainer.className = 'reader-summary';
         
-        // Add summary content
         const summaryTitle = document.createElement('h3');
         summaryTitle.textContent = 'Summary';
         
-        const summaryText = document.createElement('p');
-        summaryText.textContent = summary;
+        if (this.apiKey) {
+            const aiBadge = document.createElement('span');
+            aiBadge.className = 'ai-badge';
+            aiBadge.textContent = 'AI';
+            summaryTitle.appendChild(aiBadge);
+        }
+
+        const summaryText = document.createElement('div');
+        summaryText.className = 'summary-text';
+        summaryText.innerHTML = this.formatBulletPoints(summary);
 
         summaryContainer.appendChild(summaryTitle);
         summaryContainer.appendChild(summaryText);
 
-        // Insert at the top of the reader content
         const readerContent = document.querySelector('.reader-content');
         readerContent.insertBefore(summaryContainer, readerContent.firstChild);
     }
@@ -175,13 +235,11 @@ class Summarizer {
         const readerContent = document.querySelector('.reader-content');
         if (readerContent) {
             readerContent.insertBefore(errorDiv, readerContent.firstChild);
-            setTimeout(() => errorDiv.remove(), 3000); // Remove after 3 seconds
+            setTimeout(() => errorDiv.remove(), 3000);
         }
     }
 }
 
-// Initialize the summarizer
+// Initialize and export
 const summarizer = new Summarizer();
-
-// Export for use in other modules
 window.summarizer = summarizer; 

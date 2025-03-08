@@ -133,4 +133,43 @@ document.addEventListener('click', (e) => {
       settingsPanel.classList.contains('visible')) {
     settingsPanel.classList.remove('visible');
   }
+});
+
+// Handle AI settings
+document.addEventListener('DOMContentLoaded', () => {
+    const apiKeyInput = document.getElementById('openai-api-key');
+    const toggleVisibility = document.querySelector('.toggle-visibility');
+    const saveButton = document.querySelector('.save-key-btn');
+
+    if (apiKeyInput && toggleVisibility && saveButton) {
+        // Load saved API key
+        chrome.storage.sync.get('openai_api_key', (result) => {
+            if (result.openai_api_key) {
+                apiKeyInput.value = result.openai_api_key;
+            }
+        });
+
+        // Save API key when save button is clicked
+        saveButton.addEventListener('click', () => {
+            const apiKey = apiKeyInput.value.trim();
+            chrome.storage.sync.set({ 'openai_api_key': apiKey }, () => {
+                // Show success indicator
+                apiKeyInput.classList.add('saved');
+                saveButton.textContent = 'Saved!';
+                saveButton.style.backgroundColor = '#28a745';
+                
+                setTimeout(() => {
+                    apiKeyInput.classList.remove('saved');
+                    saveButton.textContent = 'Save';
+                    saveButton.style.backgroundColor = '#8b6b4d';
+                }, 1500);
+            });
+        });
+
+        // Toggle API key visibility
+        toggleVisibility.addEventListener('click', () => {
+            apiKeyInput.type = apiKeyInput.type === 'password' ? 'text' : 'password';
+            toggleVisibility.classList.toggle('visible');
+        });
+    }
 }); 

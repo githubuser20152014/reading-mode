@@ -219,12 +219,14 @@ input[type="range"]::-webkit-slider-thumb {
   margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .feature-info h4 {
   margin: 0 0 4px 0;
   color: #2c1810;
+  font-family: 'Georgia', serif;
+  font-size: 16px;
 }
 
 .feature-info p {
@@ -233,11 +235,120 @@ input[type="range"]::-webkit-slider-thumb {
   color: #666;
 }
 
-.upgrade-btn {
+.api-key-wrapper {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+#openai-api-key {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e8e1d9;
+  border-radius: 4px;
+  font-size: 13px;
+  background-color: white;
+  color: #2c1810;
+}
+
+.toggle-visibility {
+  background: white;
+  border: 1px solid #e8e1d9;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  cursor: pointer;
+  color: #8b6b4d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-help {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.input-help a {
+  color: #8b6b4d;
+  text-decoration: none;
+}
+
+.save-key-btn {
+  margin-left: 12px;
+  align-self: flex-end;
+  margin-bottom: 0;
+}
+
+.upgrade-btn, .save-key-btn {
   padding: 6px 12px;
   background: #8b6b4d;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.upgrade-btn:hover, .save-key-btn:hover {
+  background: #75593f;
+}
+
+/* AI Settings Section */
+#ai-settings {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#ai-settings .settings-header {
+    margin-bottom: 1rem;
+}
+
+#ai-settings h3 {
+    margin: 0;
+    color: #212529;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+#ai-settings .settings-description {
+    margin: 0.5rem 0 0;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.api-key-section {
+    background-color: #fff;
+    border: 1px solid #e8e1d9;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.api-key-section .feature-info {
+    width: 100%;
+}
+
+.api-key-section h4 {
+    color: #2c1810;
+    margin: 0 0 12px 0;
+    font-family: 'Georgia', serif;
+}
+
+#openai-api-key:focus {
+    outline: none;
+    border-color: #8b6b4d;
+    box-shadow: 0 0 0 2px rgba(139, 107, 77, 0.1);
+}
+
+#openai-api-key.saved {
+    border-color: #8b6b4d;
+    animation: flash-success 1.5s ease;
+}
+
+@keyframes flash-success {
+    0%, 100% { border-color: #e8e1d9; }
+    50% { border-color: #8b6b4d; }
 } 
