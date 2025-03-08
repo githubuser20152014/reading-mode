@@ -6,7 +6,18 @@
     border-radius: 8px;
     position: relative;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.3s ease-in;
+    animation: fadeInSlide 0.3s ease-in;
+    max-height: 1000px;
+    opacity: 1;
+    transition: all 0.3s ease-out;
+}
+
+.reader-summary.hiding {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
 .reader-summary h3 {
@@ -246,4 +257,17 @@
     color: white !important;
     cursor: not-allowed;
     opacity: 0.7;
+}
+
+@keyframes fadeInSlide {
+    from { 
+        opacity: 0;
+        transform: translateY(-20px);
+        max-height: 0;
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 1000px;
+    }
 } 

@@ -183,6 +183,14 @@ class ReadingMode {
   }
 
   async handleSummary() {
+    // If summary exists, handle toggle
+    const existingSummary = this.readerContent.querySelector('.reader-summary');
+    if (existingSummary) {
+      existingSummary.remove();
+      this.updateSummarizeButton('show');
+      return;
+    }
+
     try {
       console.log('Starting summarization...');
       const article = this.readerContent.querySelector('.reader-content');
@@ -190,20 +198,8 @@ class ReadingMode {
       
       console.log('Article text length:', text.length);
       
-      // Store original button content
-      const originalContent = this.summaryButton.innerHTML;
-      
       // Show loading state while maintaining icon
-      this.summaryButton.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="21" y1="10" x2="7" y2="10"></line>
-          <line x1="21" y1="6" x2="3" y2="6"></line>
-          <line x1="21" y1="14" x2="3" y2="14"></line>
-          <line x1="21" y1="18" x2="7" y2="18"></line>
-        </svg>
-        Summarizing...
-      `;
-      this.summaryButton.disabled = true;
+      this.updateSummarizeButton('loading');
       
       console.log('Calling AI service...');
       // Generate summary with OpenAI
@@ -219,6 +215,9 @@ class ReadingMode {
       
       // Display summary
       this.showSummary(summary);
+      
+      // Update button to "Hide summary"
+      this.updateSummarizeButton('hide');
     } catch (error) {
       console.error('Summary failed:', error);
       // Show error message to user
@@ -227,18 +226,34 @@ class ReadingMode {
         : 'Failed to generate summary. Please try again.';
       
       this.showError(errorMessage);
-    } finally {
-      // Restore original button content
-      this.summaryButton.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="21" y1="10" x2="7" y2="10"></line>
-          <line x1="21" y1="6" x2="3" y2="6"></line>
-          <line x1="21" y1="14" x2="3" y2="14"></line>
-          <line x1="21" y1="18" x2="7" y2="18"></line>
-        </svg>
-        Summarize
-      `;
-      this.summaryButton.disabled = false;
+      this.updateSummarizeButton('show');
+    }
+  }
+
+  updateSummarizeButton(state) {
+    const icon = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="21" y1="10" x2="7" y2="10"></line>
+        <line x1="21" y1="6" x2="3" y2="6"></line>
+        <line x1="21" y1="14" x2="3" y2="14"></line>
+        <line x1="21" y1="18" x2="7" y2="18"></line>
+      </svg>
+    `;
+
+    switch (state) {
+      case 'loading':
+        this.summaryButton.innerHTML = `${icon}Summarizing...`;
+        this.summaryButton.disabled = true;
+        break;
+      case 'hide':
+        this.summaryButton.innerHTML = `${icon}Hide summary`;
+        this.summaryButton.disabled = false;
+        break;
+      case 'show':
+      default:
+        this.summaryButton.innerHTML = `${icon}Summarize`;
+        this.summaryButton.disabled = false;
+        break;
     }
   }
 
