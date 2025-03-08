@@ -149,21 +149,102 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Save API key when save button is clicked
-        saveButton.addEventListener('click', () => {
-            const apiKey = apiKeyInput.value.trim();
-            chrome.storage.sync.set({ 'openai_api_key': apiKey }, () => {
-                // Show success indicator
+        // Validate API key format
+        function validateApiKeyFormat(apiKey) {
+            if (!apiKey.startsWith('sk-') || apiKey.length < 40) {
+                throw new Error('Invalid API key. Please check and try again');
+            }
+            return true;
+        }
+
+        // Test API key with a minimal API call
+        async function testApiKey(apiKey) {
+            try {
+                const response = await fetch('https://api.openai.com/v1/models', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Invalid API key. Please check and try again');
+                }
+
+                return true;
+            } catch (error) {
+                throw new Error('Invalid API key. Please check and try again');
+            }
+        }
+
+        // Show validation message
+        function showValidationMessage(message, isError = false) {
+            const existingMessage = document.querySelector('.validation-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `validation-message ${isError ? 'error' : 'success'}`;
+            messageDiv.textContent = message;
+            
+            const container = apiKeyInput.parentElement.parentElement;
+            container.insertBefore(messageDiv, apiKeyInput.parentElement.nextSibling);
+
+            setTimeout(() => messageDiv.remove(), 3000);
+        }
+
+        // Save API key with validation
+        async function saveApiKey(apiKey) {
+            try {
+                // First validate format
+                validateApiKeyFormat(apiKey);
+                
+                // Show loading state
+                saveButton.textContent = 'Validating...';
+                saveButton.disabled = true;
+                
+                // Test the API key
+                await testApiKey(apiKey);
+
+                // If validation passes, save the key
+                await chrome.storage.sync.set({ 'openai_api_key': apiKey });
+                
+                // Show success state
                 apiKeyInput.classList.add('saved');
                 saveButton.textContent = 'Saved!';
                 saveButton.style.backgroundColor = '#28a745';
+                showValidationMessage('API key saved successfully!');
                 
                 setTimeout(() => {
                     apiKeyInput.classList.remove('saved');
                     saveButton.textContent = 'Save';
                     saveButton.style.backgroundColor = '#8b6b4d';
+                    saveButton.disabled = false;
                 }, 1500);
-            });
+
+            } catch (error) {
+                // Show error state
+                saveButton.textContent = 'Save';
+                saveButton.disabled = false;
+                showValidationMessage('Invalid API key. Please check and try again', true);
+                apiKeyInput.classList.add('error');
+                
+                setTimeout(() => {
+                    apiKeyInput.classList.remove('error');
+                }, 1500);
+            }
+        }
+
+        // Save API key when save button is clicked
+        saveButton.addEventListener('click', () => {
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) {
+                showValidationMessage('Invalid API key. Please check and try again', true);
+                return;
+            }
+            saveApiKey(apiKey);
         });
 
         // Toggle API key visibility
