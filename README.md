@@ -23,9 +23,19 @@ Transform any article into a distraction-free reading experience. This browser e
 - View all saved articles in a dedicated Reading List page
 - For each saved article:
   - Click the title or "Open Article" button to read the original content
+  - Share articles directly using the system share sheet or copy link
   - See estimated reading time and save date
   - Remove articles you've finished reading
 - All article data is synced across your devices
+
+### Sharing Features
+- Share individual articles with:
+  - Native system share sheet (on supported platforms)
+  - Quick copy-to-clipboard fallback
+- Share format includes:
+  - Article title
+  - Original article URL
+- Visual feedback for successful sharing actions
 
 ### Premium Features
 - AI-powered article summaries

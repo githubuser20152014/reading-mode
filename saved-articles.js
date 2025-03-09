@@ -7,6 +7,45 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+function shareArticle(article) {
+  // Create share data
+  const shareData = {
+    title: article.title,
+    text: `Check out this article: ${article.title}`,
+    url: article.url
+  };
+
+  // Use Web Share API if available
+  if (navigator.share) {
+    navigator.share(shareData)
+      .catch(error => console.log('Error sharing:', error));
+  } else {
+    // Fallback: Copy to clipboard
+    const shareText = `${article.title}\n${article.url}`;
+    navigator.clipboard.writeText(shareText)
+      .then(() => {
+        showNotification('Link copied to clipboard');
+      })
+      .catch(error => {
+        console.error('Failed to copy:', error);
+        showNotification('Failed to copy link', true);
+      });
+  }
+}
+
+function showNotification(message, isError = false) {
+  const notification = document.createElement('div');
+  notification.className = `share-notification ${isError ? 'error' : 'success'}`;
+  notification.textContent = message;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.classList.add('fade-out');
+    setTimeout(() => notification.remove(), 300);
+  }, 2000);
+}
+
 async function loadSavedArticles() {
   try {
     const result = await chrome.storage.sync.get('savedArticlesMeta');
@@ -48,6 +87,14 @@ async function loadSavedArticles() {
             </svg>
             Open Article
           </button>
+          <button class="action-button secondary-button share-article" data-article='${JSON.stringify(article)}'>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+            Share
+          </button>
           <button class="action-button delete-button remove-article" data-id="${article.id}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -63,6 +110,13 @@ async function loadSavedArticles() {
     document.querySelectorAll('.open-article').forEach(button => {
       button.addEventListener('click', () => {
         chrome.tabs.create({ url: button.dataset.url });
+      });
+    });
+
+    document.querySelectorAll('.share-article').forEach(button => {
+      button.addEventListener('click', () => {
+        const article = JSON.parse(button.dataset.article);
+        shareArticle(article);
       });
     });
 
