@@ -5,11 +5,11 @@ Transform any article into a distraction-free reading experience. This browser e
 ## Features
 
 ### Core Features
-- **Clean Reading Interface**: Removes ads, sidebars, and other distractions
-- **Reading Time Estimation**: Shows approximate reading time based on article length
-- **Focus Mode**: Distraction-free fullscreen reading (Alt + F)
-- **Font Controls**: Customize font family, size, and line height
+- **Reader Mode**: Transform any article into a clean, distraction-free reading experience
+- **Text Customization**: Adjust font size, line height, and font family
 - **Dark Mode**: Toggle between light and dark themes for comfortable reading
+- **Reading List**: Save articles to read later with quick access to original content
+- **Focus Mode**: Enhanced reading experience with Alt + F shortcut
 
 ### AI-Powered Features
 - **Article Summarization**: Generate concise 3-point summaries of articles using OpenAI
@@ -17,41 +17,24 @@ Transform any article into a distraction-free reading experience. This browser e
   - Clean bullet-point format
   - Requires OpenAI API key
 
-### Article Management
-- Save articles for later reading
-- Local file export for offline access
-- Reading progress tracking
-- Article organization
+### Reading List
+- Save any article while in Reader Mode using the "Save for Later" button
+- Access your saved articles from the Premium Features menu
+- View all saved articles in a dedicated Reading List page
+- For each saved article:
+  - Click the title or "Open Article" button to read the original content
+  - See estimated reading time and save date
+  - Remove articles you've finished reading
+- All article data is synced across your devices
 
 ### Premium Features
-- AI-powered article summarization
-- Highlighting and notes (coming soon)
+- AI-powered article summaries
+- Highlighting and annotations
+- More features coming soon!
 
 ## Keyboard Shortcuts
 - **Alt + R**: Toggle Reading Mode
 - **Alt + F**: Toggle Focus Mode (fullscreen distraction-free reading)
-
-## Save for Later Feature
-
-### Online Storage
-Articles are saved within the extension for quick access and synced across your devices.
-
-### Local File Export
-Every saved article is automatically exported as a standalone HTML file:
-- Complete article content with original formatting
-- Embedded images
-- Article metadata (title, reading time, save date)
-- Original URL reference
-- AI-generated summary (if available)
-- Mobile-friendly responsive design
-- No extension required to view saved files
-- Can be organized in your preferred folder structure
-
-### How to Use
-1. Click the "Save for Later" button on any article in reader mode
-2. The article will be saved in the extension and downloaded as an HTML file
-3. Move the downloaded file to your preferred folder (e.g., Documents/Reading Mode)
-4. Open the file in any web browser to read offline
 
 ## Setup
 

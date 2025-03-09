@@ -1,0 +1,226 @@
+:root {
+  --primary-color: #8b6b4d;
+  --bg-color: #f8f5f1;
+  --text-color: #2c1810;
+  --secondary-text: #666;
+  --border-color: #e8e1d9;
+  --hover-bg: rgba(139, 107, 77, 0.1);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: var(--bg-color);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.saved-articles-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border-color);
+  position: relative;
+}
+
+.header h2 {
+  margin: 0;
+  color: var(--text-color);
+  font-family: 'Georgia', serif;
+  font-size: 24px;
+  text-align: center;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--primary-color);
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  position: absolute;
+  left: 0;
+}
+
+.icon-button:hover {
+  background-color: var(--hover-bg);
+}
+
+.articles-list {
+  display: grid;
+  gap: 20px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px; /* Space for scrollbar */
+}
+
+/* Custom scrollbar styles */
+.articles-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.articles-list::-webkit-scrollbar-track {
+  background: var(--bg-color);
+  border-radius: 4px;
+}
+
+.articles-list::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+  opacity: 0.8;
+}
+
+.articles-list::-webkit-scrollbar-thumb:hover {
+  opacity: 1;
+}
+
+.article-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.article-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.article-header {
+  margin-bottom: 16px;
+}
+
+.article-title-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: color 0.2s;
+}
+
+.article-title-link:hover .article-title {
+  color: var(--primary-color);
+}
+
+.article-title {
+  font-size: 20px;
+  color: var(--text-color);
+  margin: 0 0 8px 0;
+  font-family: 'Georgia', serif;
+  transition: color 0.2s;
+}
+
+.article-meta {
+  display: flex;
+  gap: 16px;
+  color: var(--secondary-text);
+  font-size: 14px;
+}
+
+.article-summary {
+  background: var(--bg-color);
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.article-summary h4 {
+  margin: 0 0 12px 0;
+  color: var(--text-color);
+  font-family: 'Georgia', serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.bullet-point {
+  display: block;
+  margin: 8px 0;
+  color: var(--text-color);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.article-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.primary-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.primary-button:hover {
+  background: #75593f;
+}
+
+.secondary-button {
+  background: none;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.secondary-button:hover {
+  background: var(--hover-bg);
+}
+
+.delete-button {
+  background: none;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.delete-button:hover {
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.no-articles {
+  text-align: center;
+  padding: 40px;
+  color: var(--secondary-text);
+  font-size: 16px;
+}
+
+.error {
+  color: #dc3545;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+} 

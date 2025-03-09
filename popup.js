@@ -253,4 +253,88 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleVisibility.classList.toggle('visible');
         });
     }
+});
+
+// Load saved articles when popup opens
+async function loadSavedArticles() {
+  try {
+    const result = await chrome.storage.sync.get('savedArticlesMeta');
+    const savedArticlesMeta = result.savedArticlesMeta || [];
+    const articlesList = document.getElementById('saved-articles-list');
+    
+    if (savedArticlesMeta.length === 0) {
+      articlesList.innerHTML = '<p class="no-articles">No saved articles yet</p>';
+      return;
+    }
+
+    // Sort articles by save date (newest first)
+    savedArticlesMeta.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+
+    articlesList.innerHTML = savedArticlesMeta.map(article => `
+      <div class="saved-article">
+        <div class="article-info">
+          <h3 class="article-title">${article.title}</h3>
+          <div class="article-meta">
+            <span class="reading-time">${article.readingTime}</span>
+            <span class="save-date">Saved ${new Date(article.savedAt).toLocaleDateString()}</span>
+          </div>
+        </div>
+        <div class="article-actions">
+          <button class="open-article" data-url="${article.url}" title="Open article">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </button>
+          <button class="remove-article" data-id="${article.id}" title="Remove from saved">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Add event listeners for article actions
+    document.querySelectorAll('.open-article').forEach(button => {
+      button.addEventListener('click', () => {
+        chrome.tabs.create({ url: button.dataset.url });
+      });
+    });
+
+    document.querySelectorAll('.remove-article').forEach(button => {
+      button.addEventListener('click', async () => {
+        const articleId = button.dataset.id;
+        const result = await chrome.storage.sync.get('savedArticlesMeta');
+        const savedArticlesMeta = result.savedArticlesMeta || [];
+        
+        // Remove from sync storage
+        const updatedMeta = savedArticlesMeta.filter(article => article.id !== articleId);
+        await chrome.storage.sync.set({ savedArticlesMeta: updatedMeta });
+        
+        // Remove from local storage
+        await chrome.storage.local.remove(`article_${articleId}`);
+        
+        // Reload the list
+        loadSavedArticles();
+      });
+    });
+  } catch (error) {
+    console.error('Failed to load saved articles:', error);
+    document.getElementById('saved-articles-list').innerHTML = 
+      '<p class="error">Failed to load saved articles</p>';
+  }
+}
+
+// Call loadSavedArticles when popup opens
+document.addEventListener('DOMContentLoaded', loadSavedArticles);
+
+// Handle reading list button
+document.getElementById('viewSavedArticles').addEventListener('click', () => {
+  chrome.tabs.create({
+    url: 'saved-articles.html',
+    active: true
+  });
 }); 

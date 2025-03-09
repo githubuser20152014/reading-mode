@@ -176,31 +176,34 @@
   bottom: 20px;
   right: 20px;
   padding: 12px 20px;
-  border-radius: 8px;
-  background-color: rgba(240, 253, 244, 0.95);
-  color: #166534;
+  border-radius: 4px;
   font-size: 14px;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10000;
   animation: slideIn 0.3s ease;
-  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+
+.reader-notification.success {
+  background: #28a745;
+  color: white;
 }
 
 .reader-notification.error {
-  background-color: #fef2f2;
-  color: #991b1b;
+  background: #dc3545;
+  color: white;
 }
 
 .reader-notification.fade-out {
-  animation: fadeOut 0.3s ease forwards;
+  opacity: 0;
 }
 
 @keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 } 

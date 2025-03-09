@@ -387,43 +387,32 @@ class ReadingMode {
 
   async saveArticle() {
     try {
-      // Get the actual content from reader mode
-      const content = this.readerContent.querySelector('.reader-content');
-      const readingTimeElement = this.readerContent.querySelector('.reading-time');
       const title = this.readerContent.querySelector('h1').textContent;
+      const readingTimeElement = this.readerContent.querySelector('.reading-time');
       
+      if (!title) {
+        console.error('Article title not found');
+        this.showNotification('Failed to save article', true);
+        return;
+      }
+
       const article = {
         id: Date.now().toString(),
         url: window.location.href,
         title: title,
         readingTime: readingTimeElement ? readingTimeElement.textContent : 'Unknown',
-        savedAt: new Date().toISOString(),
-        readStatus: 'unread'
+        savedAt: new Date().toISOString()
       };
 
-      // Get existing summary if available
-      const summaryElement = this.readerContent.querySelector('.reader-summary');
-      if (summaryElement) {
-        article.summary = Array.from(summaryElement.querySelectorAll('.bullet-point'))
-          .map(point => point.textContent)
-          .join('\n');
-      }
+      console.log('Saving article:', article);
 
-      // Save metadata to sync storage (smaller data)
+      // Save to sync storage
       const result = await chrome.storage.sync.get('savedArticlesMeta');
       const savedArticlesMeta = result.savedArticlesMeta || [];
       
       // Check if article is already saved
       const existingIndex = savedArticlesMeta.findIndex(a => a.url === article.url);
       
-      // Save full content to local storage (larger data)
-      const fullArticle = {
-        ...article,
-        content: content.innerHTML
-      };
-      
-      await chrome.storage.local.set({ [`article_${article.id}`]: fullArticle });
-
       if (existingIndex >= 0) {
         savedArticlesMeta[existingIndex] = article;
         this.updateSaveButton(true);
@@ -435,96 +424,13 @@ class ReadingMode {
       }
 
       await chrome.storage.sync.set({ savedArticlesMeta });
-      
-      // Create downloadable HTML file
-      const htmlContent = this.createDownloadableHTML(title, content.innerHTML, article);
-      this.downloadArticle(htmlContent, this.sanitizeFilename(title));
-      
-      // Debug: Verify storage
-      console.log('Verifying article storage...');
-      console.log('Sync storage - Saved articles:', savedArticlesMeta);
-      console.log('Local storage - Full article:', fullArticle);
+      console.log('Saved articles:', savedArticlesMeta);
       
     } catch (error) {
       console.error('Failed to save article:', error);
       this.showNotification('Failed to save article', true);
       this.updateSaveButton(false);
     }
-  }
-
-  createDownloadableHTML(title, content, article) {
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title}</title>
-    <style>
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            color: #333;
-        }
-        .article-meta {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        .summary {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-    </style>
-</head>
-<body>
-    <div class="article-meta">
-        <h1>${title}</h1>
-        <p>Reading time: ${article.readingTime}</p>
-        <p>Saved on: ${new Date(article.savedAt).toLocaleString()}</p>
-        <p>Original URL: <a href="${article.url}">${article.url}</a></p>
-    </div>
-    ${article.summary ? `
-    <div class="summary">
-        <h3>Summary</h3>
-        <p>${article.summary.split('\n').join('</p><p>')}</p>
-    </div>` : ''}
-    <div class="article-content">
-        ${content}
-    </div>
-</body>
-</html>`;
-  }
-
-  sanitizeFilename(filename) {
-    // Remove invalid filename characters and trim
-    return filename
-      .replace(/[<>:"/\\|?*]/g, '')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 100) + '.html';
-  }
-
-  downloadArticle(content, filename) {
-    const blob = new Blob([content], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
   }
 
   updateSaveButton(isSaved) {
@@ -540,10 +446,26 @@ class ReadingMode {
     }
   }
 
+  async checkIfSaved() {
+    try {
+      const result = await chrome.storage.sync.get('savedArticlesMeta');
+      const savedArticlesMeta = result.savedArticlesMeta || [];
+      const isSaved = savedArticlesMeta.some(article => article.url === window.location.href);
+      this.updateSaveButton(isSaved);
+    } catch (error) {
+      console.error('Failed to check saved status:', error);
+      this.updateSaveButton(false);
+    }
+  }
+
   showNotification(message, isError = false) {
     const notification = document.createElement('div');
     notification.className = `reader-notification ${isError ? 'error' : 'success'}`;
     notification.textContent = message;
+    
+    // Remove existing notifications
+    const existingNotifications = this.readerContent.querySelectorAll('.reader-notification');
+    existingNotifications.forEach(n => n.remove());
     
     this.readerContent.appendChild(notification);
     
@@ -552,19 +474,6 @@ class ReadingMode {
       notification.classList.add('fade-out');
       setTimeout(() => notification.remove(), 300);
     }, 3000);
-  }
-
-  async checkIfSaved() {
-    try {
-      const result = await chrome.storage.sync.get('savedArticlesMeta');
-      const savedArticlesMeta = result.savedArticlesMeta || [];
-      const isSaved = savedArticlesMeta.some(article => article.url === window.location.href);
-      console.log('Article saved status:', isSaved); // Debug log
-      this.updateSaveButton(isSaved);
-    } catch (error) {
-      console.error('Failed to check saved status:', error);
-      this.updateSaveButton(false);
-    }
   }
 }
 
