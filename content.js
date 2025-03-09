@@ -11,6 +11,7 @@ class ReadingMode {
     };
     this.summaryButton = null;
     this.isFullscreen = false;
+    this.savedArticles = [];
     
     // Add keyboard shortcut listener
     document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
@@ -94,16 +95,35 @@ class ReadingMode {
       stats: stats 
     });
 
-    // Add summary button only if premium or trial available
-    console.log('Checking premium features for summarization...');
-    console.log('Summarization enabled:', this.premiumService.features.summarization.enabled);
-    console.log('Daily quota:', this.premiumService.features.summarization.dailyQuota);
-    
+    // Create reader controls container if it doesn't exist
+    const controls = this.readerContent.querySelector('.reader-controls');
+    if (!controls) {
+      const controlsContainer = document.createElement('div');
+      controlsContainer.className = 'reader-controls';
+      this.readerContent.appendChild(controlsContainer);
+    }
+
+    // Add save button
+    const saveButton = document.createElement('button');
+    saveButton.className = 'save-button';
+    saveButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+      </svg>
+      Save for Later
+    `;
+    saveButton.addEventListener('click', () => this.saveArticle());
+    this.readerContent.querySelector('.reader-controls').appendChild(saveButton);
+
+    // Check if article is already saved
+    this.checkIfSaved();
+
+    // Add summary button if premium/trial available
     if (this.premiumService.features.summarization.enabled || 
         this.premiumService.features.summarization.dailyQuota > 0) {
       console.log('Creating summary button...');
       this.summaryButton = document.createElement('button');
-      this.summaryButton.className = 'reader-control-button summary-button';
+      this.summaryButton.className = 'summary-button';
       this.summaryButton.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="21" y1="10" x2="7" y2="10"></line>
@@ -116,8 +136,7 @@ class ReadingMode {
       this.summaryButton.addEventListener('click', () => this.handleSummary());
       
       // Add button to reader controls
-      const controls = this.readerContent.querySelector('.reader-controls');
-      controls.appendChild(this.summaryButton);
+      this.readerContent.querySelector('.reader-controls').appendChild(this.summaryButton);
       
       console.log('Summary button created and added to the controls');
     } else {
@@ -363,6 +382,188 @@ class ReadingMode {
     if (e.altKey && e.key.toLowerCase() === 'f') {
       e.preventDefault(); // Prevent default browser behavior
       this.toggleFocusMode();
+    }
+  }
+
+  async saveArticle() {
+    try {
+      // Get the actual content from reader mode
+      const content = this.readerContent.querySelector('.reader-content');
+      const readingTimeElement = this.readerContent.querySelector('.reading-time');
+      const title = this.readerContent.querySelector('h1').textContent;
+      
+      const article = {
+        id: Date.now().toString(),
+        url: window.location.href,
+        title: title,
+        readingTime: readingTimeElement ? readingTimeElement.textContent : 'Unknown',
+        savedAt: new Date().toISOString(),
+        readStatus: 'unread'
+      };
+
+      // Get existing summary if available
+      const summaryElement = this.readerContent.querySelector('.reader-summary');
+      if (summaryElement) {
+        article.summary = Array.from(summaryElement.querySelectorAll('.bullet-point'))
+          .map(point => point.textContent)
+          .join('\n');
+      }
+
+      // Save metadata to sync storage (smaller data)
+      const result = await chrome.storage.sync.get('savedArticlesMeta');
+      const savedArticlesMeta = result.savedArticlesMeta || [];
+      
+      // Check if article is already saved
+      const existingIndex = savedArticlesMeta.findIndex(a => a.url === article.url);
+      
+      // Save full content to local storage (larger data)
+      const fullArticle = {
+        ...article,
+        content: content.innerHTML
+      };
+      
+      await chrome.storage.local.set({ [`article_${article.id}`]: fullArticle });
+
+      if (existingIndex >= 0) {
+        savedArticlesMeta[existingIndex] = article;
+        this.updateSaveButton(true);
+        this.showNotification('Article updated');
+      } else {
+        savedArticlesMeta.push(article);
+        this.updateSaveButton(true);
+        this.showNotification('Article saved');
+      }
+
+      await chrome.storage.sync.set({ savedArticlesMeta });
+      
+      // Create downloadable HTML file
+      const htmlContent = this.createDownloadableHTML(title, content.innerHTML, article);
+      this.downloadArticle(htmlContent, this.sanitizeFilename(title));
+      
+      // Debug: Verify storage
+      console.log('Verifying article storage...');
+      console.log('Sync storage - Saved articles:', savedArticlesMeta);
+      console.log('Local storage - Full article:', fullArticle);
+      
+    } catch (error) {
+      console.error('Failed to save article:', error);
+      this.showNotification('Failed to save article', true);
+      this.updateSaveButton(false);
+    }
+  }
+
+  createDownloadableHTML(title, content, article) {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .article-meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="article-meta">
+        <h1>${title}</h1>
+        <p>Reading time: ${article.readingTime}</p>
+        <p>Saved on: ${new Date(article.savedAt).toLocaleString()}</p>
+        <p>Original URL: <a href="${article.url}">${article.url}</a></p>
+    </div>
+    ${article.summary ? `
+    <div class="summary">
+        <h3>Summary</h3>
+        <p>${article.summary.split('\n').join('</p><p>')}</p>
+    </div>` : ''}
+    <div class="article-content">
+        ${content}
+    </div>
+</body>
+</html>`;
+  }
+
+  sanitizeFilename(filename) {
+    // Remove invalid filename characters and trim
+    return filename
+      .replace(/[<>:"/\\|?*]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 100) + '.html';
+  }
+
+  downloadArticle(content, filename) {
+    const blob = new Blob([content], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  updateSaveButton(isSaved) {
+    const saveButton = this.readerContent.querySelector('.save-button');
+    if (saveButton) {
+      saveButton.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+        ${isSaved ? 'Saved' : 'Save for Later'}
+      `;
+      saveButton.classList.toggle('saved', isSaved);
+    }
+  }
+
+  showNotification(message, isError = false) {
+    const notification = document.createElement('div');
+    notification.className = `reader-notification ${isError ? 'error' : 'success'}`;
+    notification.textContent = message;
+    
+    this.readerContent.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+      notification.classList.add('fade-out');
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  }
+
+  async checkIfSaved() {
+    try {
+      const result = await chrome.storage.sync.get('savedArticlesMeta');
+      const savedArticlesMeta = result.savedArticlesMeta || [];
+      const isSaved = savedArticlesMeta.some(article => article.url === window.location.href);
+      console.log('Article saved status:', isSaved); // Debug log
+      this.updateSaveButton(isSaved);
+    } catch (error) {
+      console.error('Failed to check saved status:', error);
+      this.updateSaveButton(false);
     }
   }
 }

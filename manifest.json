@@ -11,7 +11,8 @@
     "identity",
     "identity.email",
     "payments",
-    "scripting"
+    "scripting",
+    "unlimitedStorage"
   ],
   "commands": {
     "toggle-reader-mode": {

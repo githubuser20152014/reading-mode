@@ -17,6 +17,12 @@ Transform any article into a distraction-free reading experience. This browser e
   - Clean bullet-point format
   - Requires OpenAI API key
 
+### Article Management
+- Save articles for later reading
+- Local file export for offline access
+- Reading progress tracking
+- Article organization
+
 ### Premium Features
 - AI-powered article summarization
 - Highlighting and notes (coming soon)
@@ -24,6 +30,28 @@ Transform any article into a distraction-free reading experience. This browser e
 ## Keyboard Shortcuts
 - **Alt + R**: Toggle Reading Mode
 - **Alt + F**: Toggle Focus Mode (fullscreen distraction-free reading)
+
+## Save for Later Feature
+
+### Online Storage
+Articles are saved within the extension for quick access and synced across your devices.
+
+### Local File Export
+Every saved article is automatically exported as a standalone HTML file:
+- Complete article content with original formatting
+- Embedded images
+- Article metadata (title, reading time, save date)
+- Original URL reference
+- AI-generated summary (if available)
+- Mobile-friendly responsive design
+- No extension required to view saved files
+- Can be organized in your preferred folder structure
+
+### How to Use
+1. Click the "Save for Later" button on any article in reader mode
+2. The article will be saved in the extension and downloaded as an HTML file
+3. Move the downloaded file to your preferred folder (e.g., Documents/Reading Mode)
+4. Open the file in any web browser to read offline
 
 ## Setup
 
