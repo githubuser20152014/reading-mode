@@ -1,127 +1,81 @@
 # Reading Mode Extension
 
-A Chrome/Brave extension that transforms articles into a clean, distraction-free reading experience with dark mode support.
+Transform any article into a distraction-free reading experience. This browser extension provides a clean, customizable reading interface with smart features like AI-powered summarization.
 
-## Current Features
+## Features
 
-- 🎭 Smooth transitions between modes
-- 🔄 One-click toggle for reading mode
-- 📖 Clean article view with optimal typography
-- 🌓 Dark mode support with persistent settings
-- ✨ Customizable text settings (size, spacing, font)
-- 🎯 Removes ads, sidebars, and other distractions
-- 📱 Responsive layout for comfortable reading
-- 🎨 Single-screen settings interface
-- 💎 Premium features in dedicated settings panel
-- 🎯 Focused UI with minimal distractions
+### Core Features
+- **Clean Reading Interface**: Removes ads, sidebars, and other distractions
+- **Reading Time Estimation**: Shows approximate reading time based on article length
+- **Font Controls**: Customize font family, size, and line height
+- **Dark Mode**: Toggle between light and dark themes for comfortable reading
+- Keyboard shortcut (Alt+R) to toggle reading mode
 
-## Planned User Experience
+### AI-Powered Features
+- **Article Summarization**: Generate concise 3-point summaries of articles using OpenAI
+  - Toggle summaries with a single click
+  - Clean bullet-point format
+  - Requires OpenAI API key
 
-### Activation Methods
-- [ ] Browser toolbar icon with visual readability indicator
-- [x] Customizable keyboard shortcuts (e.g., Alt+R)
-- [x] Context menu integration
+### Premium Features
+- AI-powered article summarization
+- Highlighting and notes (coming soon)
 
-### Transition Experience
-- [x] Smooth animation transitions (0.3-0.5s)
-- [ ] Background content analysis
-- [ ] Loading indicators for longer articles
+## Setup
 
-### Reading Interface
-- [x] Minimalistic controls
-- [x] Multiple exit options (back arrow, extension icon)
-- [x] Single-screen settings panel
-- [x] Intuitive navigation between settings
+### Basic Installation
+1. Install the extension from the Chrome Web Store
+2. Click the extension icon to activate reading mode on any article
+3. Use the settings gear icon to customize your reading experience
 
-### Smart Features
-- [ ] Pre-processing of page content
-- [ ] Automatic readability detection
-- [ ] Graceful handling of edge cases
-  - [ ] Failed content detection warnings
-  - [ ] Partial content notices
-  - [ ] Interactive content warnings
-- [x] Reading time estimation
+### Setting up AI Features
+1. Get an OpenAI API key from [OpenAI's platform](https://platform.openai.com/api-keys)
+2. Click the settings gear icon in the extension
+3. Enter and save your API key in the Premium Features section
+4. Your key will be securely stored for future use
 
-## Planned Features
+## Using the Summarizer
 
-### Phase 2: Enhanced Reading Experience
-- [x] Font customization (size, family, spacing)
-- [ ] Custom width controls
-- [ ] Focus mode highlighting
-- [ ] Keyboard shortcuts
-- [ ] Persistent settings per site
+1. Open any article you want to read
+2. Activate reading mode
+3. Click the "Summarize" button at the top of the article
+4. View your 3-point summary
+5. Toggle the summary visibility as needed
 
-### Phase 3: Advanced Features
-- [ ] Text-to-speech support
-- [ ] Progress tracking
-- [ ] Article saving for offline reading
-- [ ] Highlighting and annotations
-- [ ] Reading statistics
+## Security
 
-### Phase 4: Polish & Optimization
-- [ ] Performance improvements
-- [ ] Cross-browser support
-- [ ] Customizable themes
-- [ ] Sync settings across devices
-- [ ] Smooth transitions and animations
-- [ ] Pre-processing optimization
-- [ ] Edge case handling
+- API keys are stored securely using chrome.storage.sync
+- Keys are never transmitted except to OpenAI's API
+- All API communications use HTTPS
+- API keys are masked by default with optional visibility toggle
 
-## Installation
+## Privacy
+
+- Article content is processed locally for basic features
+- Only necessary content is sent to OpenAI for summarization
+- No user data is stored except the API key
+- No tracking or analytics
+
+## Development
 
 ### Prerequisites
-- Git installed on your machine
-- Chrome or Brave browser installed
-- Basic knowledge of command line operations
+- Node.js and npm
+- Chrome browser for testing
+- OpenAI API key for AI features
 
-### Steps
+### Local Setup
 1. Clone the repository
-   ```bash
-   # Using HTTPS
-   git clone https://github.com/YOUR_USERNAME/reading-mode-extension.git
-   
-   # Using SSH
-   git clone git@github.com:YOUR_USERNAME/reading-mode-extension.git
-   ```
+2. Install dependencies: `npm install`
+3. Load the extension in Chrome:
+   - Open chrome://extensions/
+   - Enable Developer mode
+   - Click "Load unpacked"
+   - Select the extension directory
 
-2. Navigate to the project directory
-   ```bash
-   cd reading-mode-extension
-   ```
+## Contributing
 
-3. Install dependencies (if any)
-   ```bash
-   # No dependencies required for basic functionality
-   # Future versions may require npm install
-   ```
+Contributions are welcome! Please read our contributing guidelines before submitting pull requests.
 
-4. Load the extension in Chrome/Brave
-   - Open Chrome/Brave and navigate to `chrome://extensions/`
-   - Enable "Developer mode" in the top-right corner
-   - Click "Load unpacked" button
-   - Select the `reading-mode-extension` directory
+## License
 
-5. Verify Installation
-   - Look for the extension icon in your browser toolbar
-   - If you don't see it, click the puzzle piece icon to find it
-   - Pin it to your toolbar for easy access
-
-### Troubleshooting
-- If the extension doesn't appear, try refreshing the extensions page
-- Make sure all required files are present in the directory
-- Check the console for any error messages
-
-## Icons
-The extension uses three icon sizes:
-- 16px: Used for favicon and toolbar
-- 48px: Used in extension management page and installation
-- 128px: Used in Chrome Web Store and higher resolution displays
-
-Icon files are stored in the `icons/` directory as:
-- icon16px.png
-- icon48px.png  
-- icon128px.png
-
-## Credits
-
-This extension uses [Mozilla's Readability.js](https://github.com/mozilla/readability) for content parsing. 
+[Add your license information here] 

@@ -1,23 +1,30 @@
 class PremiumService {
   constructor() {
-    this.aiService = new AIService();
     this.features = {
       summarization: {
         enabled: false,
-        dailyQuota: 3,    // Free tier
-        maxLength: 300    // Free tier token limit
-      },
-      highlighting: false,
-      offlineStorage: false
+        dailyQuota: 0
+      }
     };
-    this.init();
+    this.aiService = new AIService();
   }
 
   async init() {
-    // Check premium status from storage/server
-    const status = await chrome.storage.sync.get('premiumStatus');
-    if (status.premiumStatus) {
-      await this.activateFeatures(status.premiumStatus.features);
+    try {
+      // Initialize AI service
+      await this.aiService.init();
+      
+      // Check if API key exists
+      const result = await chrome.storage.sync.get('openai_api_key');
+      if (result.openai_api_key) {
+        this.features.summarization.enabled = true;
+        this.features.summarization.dailyQuota = 3; // Default daily quota
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Failed to initialize premium service:', error);
+      return false;
     }
   }
 

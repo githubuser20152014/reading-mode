@@ -1,0 +1,86 @@
+/* Highlight Menu */
+.highlight-menu {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1px solid #e8e1d9;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.color-picker {
+    display: flex;
+    gap: 4px;
+    padding-right: 8px;
+    border-right: 1px solid #e8e1d9;
+}
+
+.color-option {
+    width: 24px;
+    height: 24px;
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+.delete-highlight {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: #dc2626;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-highlight:hover {
+    background-color: #fee2e2;
+}
+
+/* Highlight Styles */
+.highlight {
+    border-radius: 2px;
+    padding: 0 2px;
+    margin: 0 -2px;
+}
+
+.highlight.yellow {
+    background-color: #fef3c7;
+}
+
+.highlight.green {
+    background-color: #dcfce7;
+}
+
+.highlight.blue {
+    background-color: #dbeafe;
+}
+
+.highlight.purple {
+    background-color: #f3e8ff;
+}
+
+.highlight.red {
+    background-color: #fee2e2;
+}
+
+/* Animation */
+@keyframes highlightFadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.highlight-menu {
+    animation: highlightFadeIn 0.2s ease;
+} 
