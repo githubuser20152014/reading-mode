@@ -52,10 +52,20 @@ class ReadingMode {
       return;
     }
 
-    // Insert reader content
+    // Calculate reading time
+    const readingTime = this.calculateReadingTime(article.content);
+
+    // Insert reader content with reading time
     this.readerContent.innerHTML = `
       <div class="reader-header">
         <h1>${article.title}</h1>
+        <div class="reading-time">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ${readingTime}
+        </div>
         <div class="reader-controls"></div>
       </div>
       <div class="reader-content">
@@ -308,6 +318,20 @@ class ReadingMode {
     setTimeout(() => {
       errorContainer.remove();
     }, 5000);
+  }
+
+  calculateReadingTime(text) {
+    const wordsPerMinute = 225; // Average reading speed
+    const wordCount = text.trim().split(/\s+/).length;
+    const minutes = Math.ceil(wordCount / wordsPerMinute);
+    
+    if (minutes < 1) {
+      return 'Less than 1 min read';
+    } else if (minutes === 1) {
+      return '1 min read';
+    } else {
+      return `${minutes} min read`;
+    }
   }
 }
 

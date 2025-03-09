@@ -5,17 +5,17 @@ Transform any article into a distraction-free reading experience. This browser e
 ## Features
 
 ### Core Features
-- Clean, distraction-free reading mode
-- Customizable text size and line spacing
-- Multiple font options (Sans-serif, Serif, Merriweather, Mono)
-- Dark mode support
+- **Clean Reading Interface**: Removes ads, sidebars, and other distractions
+- **Reading Time Estimation**: Shows approximate reading time based on article length
+- **Font Controls**: Customize font family, size, and line height
+- **Dark Mode**: Toggle between light and dark themes for comfortable reading
 - Keyboard shortcut (Alt+R) to toggle reading mode
 
 ### AI-Powered Features
-- **Article Summarization**: Get instant 3-point summaries of any article
-- Powered by OpenAI's GPT-3.5 model
-- Bullet-point format for easy scanning
-- Fallback to basic summarization if AI is unavailable
+- **Article Summarization**: Generate concise 3-point summaries of articles using OpenAI
+  - Toggle summaries with a single click
+  - Clean bullet-point format
+  - Requires OpenAI API key
 
 ### Premium Features
 - AI-powered article summarization

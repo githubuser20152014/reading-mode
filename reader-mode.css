@@ -57,4 +57,29 @@
 
 .summary-button:hover {
   opacity: 1;
+}
+
+.reading-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #8B735F;
+    font-size: 14px;
+    margin: 8px 0 16px 0;
+    font-weight: 500;
+}
+
+.reading-time svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+}
+
+.reader-header h1 {
+    margin-bottom: 4px;
+}
+
+.reader-header {
+    display: flex;
+    flex-direction: column;
 } 
