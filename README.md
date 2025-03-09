@@ -7,9 +7,9 @@ Transform any article into a distraction-free reading experience. This browser e
 ### Core Features
 - **Clean Reading Interface**: Removes ads, sidebars, and other distractions
 - **Reading Time Estimation**: Shows approximate reading time based on article length
+- **Focus Mode**: Distraction-free fullscreen reading (Alt + F)
 - **Font Controls**: Customize font family, size, and line height
 - **Dark Mode**: Toggle between light and dark themes for comfortable reading
-- Keyboard shortcut (Alt+R) to toggle reading mode
 
 ### AI-Powered Features
 - **Article Summarization**: Generate concise 3-point summaries of articles using OpenAI
@@ -20,6 +20,10 @@ Transform any article into a distraction-free reading experience. This browser e
 ### Premium Features
 - AI-powered article summarization
 - Highlighting and notes (coming soon)
+
+## Keyboard Shortcuts
+- **Alt + R**: Toggle Reading Mode
+- **Alt + F**: Toggle Focus Mode (fullscreen distraction-free reading)
 
 ## Setup
 
@@ -34,25 +38,28 @@ Transform any article into a distraction-free reading experience. This browser e
 3. Enter and save your API key in the Premium Features section
 4. Your key will be securely stored for future use
 
-## Using the Summarizer
+## Using the Extension
 
-1. Open any article you want to read
-2. Activate reading mode
-3. Click the "Summarize" button at the top of the article
-4. View your 3-point summary
-5. Toggle the summary visibility as needed
+### Reading Mode
+1. Navigate to any article
+2. Click the extension icon or press Alt + R to activate reading mode
+3. View estimated reading time below the article title
+4. Use the controls to adjust text size, font, and theme
 
-## Security
+### Focus Mode
+- Press Alt + F while in reading mode to enter distraction-free fullscreen mode
+- Press Alt + F again or Esc to exit focus mode
 
+### Article Summarization
+1. Activate reading mode
+2. Click the "Summarize" button at the top of the article
+3. View your 3-point summary
+4. Toggle the summary visibility as needed
+
+## Security & Privacy
 - API keys are stored securely using chrome.storage.sync
 - Keys are never transmitted except to OpenAI's API
 - All API communications use HTTPS
-- API keys are masked by default with optional visibility toggle
-
-## Privacy
-
-- Article content is processed locally for basic features
-- Only necessary content is sent to OpenAI for summarization
 - No user data is stored except the API key
 - No tracking or analytics
 
@@ -71,6 +78,17 @@ Transform any article into a distraction-free reading experience. This browser e
    - Enable Developer mode
    - Click "Load unpacked"
    - Select the extension directory
+
+### Deployment Checklist
+1. Version number updated in manifest.json
+2. All features tested:
+   - Reading mode toggle (Alt + R)
+   - Focus mode (Alt + F)
+   - Summarization (with API key)
+   - Font controls and dark mode
+3. Code minified and optimized
+4. Documentation updated
+5. Security measures verified
 
 ## Contributing
 

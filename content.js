@@ -10,6 +10,10 @@ class ReadingMode {
       readingTime: 0
     };
     this.summaryButton = null;
+    this.isFullscreen = false;
+    
+    // Add keyboard shortcut listener
+    document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
   }
 
   async init() {
@@ -331,6 +335,34 @@ class ReadingMode {
       return '1 min read';
     } else {
       return `${minutes} min read`;
+    }
+  }
+
+  toggleFocusMode() {
+    if (!this.isFullscreen) {
+      // Enter fullscreen
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      }
+      this.readerContent.classList.add('focus-mode');
+    } else {
+      // Exit fullscreen
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+      this.readerContent.classList.remove('focus-mode');
+    }
+    this.isFullscreen = !this.isFullscreen;
+  }
+
+  handleKeyboardShortcuts(e) {
+    // Only handle shortcuts when reader mode is enabled
+    if (!this.isEnabled) return;
+
+    // Alt + F for focus mode
+    if (e.altKey && e.key.toLowerCase() === 'f') {
+      e.preventDefault(); // Prevent default browser behavior
+      this.toggleFocusMode();
     }
   }
 }
